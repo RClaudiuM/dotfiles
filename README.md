@@ -15,12 +15,12 @@ You will need git installed by your prefered method ( MAC already had it install
 First, check out the dotfiles repo in your $HOME directory using git
 
 ```
-$ git clone git@github.com/RClaudiuM/dotfiles.git
-$ cd dotfiles
+git clone https://github.com/RClaudiuM/dotfiles.git
+cd dotfiles
 ```
 
 then use GNU stow to create symlinks
 
 ```
-$ stow .
+stow .
 ```
