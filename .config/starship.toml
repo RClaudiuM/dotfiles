@@ -7,10 +7,11 @@ right_format = """$all"""
 command_timeout = 1000
 
 [directory.substitutions]
-'~/tests/starship-custom' = 'work-project'
+# '~/tests/starship-custom' = 'work-project'
 
 [git_branch]
 format =  '[$symbol$branch(:$remote_branch)]($style)'
+symbol = " "
 
 [aws]
 format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
