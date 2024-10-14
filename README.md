@@ -57,6 +57,16 @@ and casks like:
 - obsidian - a note-taking app
 - figma - a design tool
 
+### Brew taps
+
+Before installing all the packages and casks you will need to tap some repositories
+
+```bash
+brew tap hashicorp/tap mongodb/brew
+```
+
+### Install Brew packages and casks
+
 To install all those you will need to run
 
 ```bash
