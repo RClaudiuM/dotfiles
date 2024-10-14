@@ -39,7 +39,7 @@ Packages like:
 - [fzf](https://formulae.brew.sh/formula/fzf#default) - fuzzy finder for terminals, check it out [here](https://github.com/junegunn/fzf)
 - [terraform](https://developer.hashicorp.com/terraform)
 - [mongodb-community](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#installing-mongodb-8.0-edition-edition) - mongodb server ( will require starting the service )
-- [nvm](https://formulae.brew.sh/formula/nvm#default) - [node version manager ](https://github.com/nvm-sh/nvm)
+- [nvm](https://formulae.brew.sh/formula/nvm#default) - [node version manager](https://github.com/nvm-sh/nvm)
 - [redis](https://formulae.brew.sh/formula/redis#default) - redis server ( will require starting the service )
 - [starship](https://formulae.brew.sh/formula/starship#default) - cross-shell prompt
 - [stow](https://formulae.brew.sh/formula/stow#default) - symlink manager, this what we will use to manage the dotfiles, check more [here](https://www.gnu.org/software/stow/manual/stow.html)
