@@ -8,6 +8,14 @@ With the help of [STOW](https://www.gnu.org/software/stow/) i can apply them nic
 
 You will need git installed by your preferred method ( MAC already had it installed by default )
 
+## Install Oh My Zsh
+
+You can install Oh My Zsh by running the following command in your terminal
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
 ## Install Homebrew
 
 You can install Homebrew by running the following command in your terminal
