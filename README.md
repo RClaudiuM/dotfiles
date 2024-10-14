@@ -206,6 +206,4 @@ darwin-rebuild switch --flake ~/dotfiles/.config/nix-darwin#{userName}
 
 ## Nix packages and settings
 
-You can find more information about nix packages and settings on the following website:
-
-https://mynixos.com/nixpkgs
+You can find more information about nix packages and settings on the following [website](https://mynixos.com/nixpkgs).
