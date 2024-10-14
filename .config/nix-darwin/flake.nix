@@ -117,9 +117,10 @@
         # NSGlobalDomain.KeyRepeat = 2;
 
 
-        # Trackpad
+        # Trackpad settings
         trackpad.Clicking = true;
-        NSGlobalDomain."com.apple.trackpad.scaling" = 3;
+        NSGlobalDomain."com.apple.trackpad.forceClick" = true;
+        NSGlobalDomain."com.apple.trackpad.scaling" = 3.0;
         trackpad.SecondClickThreshold = 0;
       };
 
