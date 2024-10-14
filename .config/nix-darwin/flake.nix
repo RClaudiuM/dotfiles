@@ -142,6 +142,9 @@
       # $ darwin-rebuild changelog
       system.stateVersion = 5;
 
+      # Enable touch id propmpt for sudo approval in the terminal
+      security.pam.enableSudoTouchIdAuth = true;
+
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
     };

@@ -170,14 +170,42 @@ After you have installed Nix, restart your terminal/shell and run the following 
 nix-shell -p neofetch --run neofetch
 ```
 
-## Initialize nix flakes and install `nix-darwin`
+## Update user profile
 
-You can check out some documentation about nix flakes [here](https://github.com/LnL7/nix-darwin?tab=readme-ov-file#flakes) on their github page.
+In the [flake config file](.config/nix-darwin/flake.nix) you will need to rename the user set in the file to your current user.
 
-To initialize nix flakes and install `nix-darwin` you will need to run the following command
+## Running the flake
+
+You can run the flake by running the following command in your terminal
 
 ```bash
-nix flake init -t nix-darwin --extra-experimental-features "nix-command flakes"
+nix run nix-darwin --experimental-features "nix-command flakes" -- switch --flake ~/dotfiles/nix-darwin#{userName}
 ```
+
+Replace userName with your current user name.
+
+## Verify darwin
+
+If the above command ran successfully you can verify the installation by running the following command
+
+```bash
+which darwin-rebuild
+```
+
+If that outputs a path to the darwin-rebuild command then you are good to go.
+
+## Update the flake
+
+You can now update the flake config to your liking be installing packages and managing settings straight from the flake file.
+
+Once you're ready to apply the changes you can run the following command
+
+```bash
+darwin-rebuild switch --flake ~/dotfiles/.config/nix-darwin#{userName}
+```
+
+## Nix packages and settings
+
+You can find more information about nix packages and settings on the following website:
 
 https://mynixos.com/nixpkgs
