@@ -62,7 +62,7 @@ and casks like:
 Before installing all the packages and casks you will need to tap some repositories
 
 ```bash
-brew tap hashicorp/tap mongodb/brew
+brew tap hashicorp/tap mongodb/brew homebrew/cask-fonts
 ```
 
 ### Install Brew packages and casks
