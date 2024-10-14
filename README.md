@@ -1,8 +1,14 @@
 # My dotfiles
 
-In order to be able to conveniently manage my dotfiles i've decided that they will from now on live on this repository inside GitHub.
+In order to be able to conveniently manage my dotfiles I've decided that they will from now on live on this repository inside GitHub.
 
-With the help of [STOW](https://www.gnu.org/software/stow/) i can apply them nicely in my machine
+With the help of [STOW](https://www.gnu.org/software/stow/) I can apply them nicely in my machine.
+
+This repository also contains a nix flake configuration file that will be used to spin up dev environments.
+
+For that you can check out the [Using Nix and nix-darwin to spin up dev environments](#using-nix) section.
+
+If not, below are some steps to manually set up a dev environment on a mac machine.
 
 ## Git installation
 
@@ -131,3 +137,47 @@ then use GNU stow to create symlinks
 ```bash
 stow .
 ```
+
+# Using Nix and nix-darwin to spin up dev environments {#using-nix}
+
+## What is Nix?
+
+Nix is a package manager that is used to manage packages and environments in a functional way. It is used to manage dependencies and environments in a declarative way.
+
+More details on their official [website](https://nixos.org/)
+
+## What is nix-darwin?
+
+`nix-darwin` is a module that is used to manage the configuration of a machine using nix. It is used to manage the configuration of the machine in a declarative way.
+
+## Install Nix
+
+You can install Nix by following the instructions on their official [website](https://nixos.org/download/#nix-install-macos)
+
+or by running the following command in your terminal
+
+```bash
+sh <(curl -L https://nixos.org/nix/install)
+```
+
+The installation is pretty straightforward and you can check what it actually does [here](https://nix.dev/manual/nix/2.18/installation/installing-binary#macos-installation)
+
+## Verify the installation
+
+After you have installed Nix, restart your terminal/shell and run the following command to verify the installation:
+
+```bash
+nix-shell -p neofetch --run neofetch
+```
+
+## Initialize nix flakes and install `nix-darwin`
+
+You can check out some documentation about nix flakes [here](https://github.com/LnL7/nix-darwin?tab=readme-ov-file#flakes) on their github page.
+
+To initialize nix flakes and install `nix-darwin` you will need to run the following command
+
+```bash
+nix flake init -t nix-darwin --extra-experimental-features "nix-command flakes"
+```
+
+https://mynixos.com/nixpkgs
