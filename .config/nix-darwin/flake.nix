@@ -87,6 +87,12 @@
       system.defaults = {
         dock.autohide  = true;
         dock.orientation = "left";
+
+        dock.magnification = true;
+
+        dock.tilesize = 46;
+        dock.largesize = 100;
+
         dock.persistent-apps = [
           # "${pkgs.alacritty}/Applications/Alacritty.app"
           # "${pkgs.obsidian}/Applications/Obsidian.app"
@@ -106,11 +112,15 @@
           "/Users/claudiu.roman/Downloads"
           "/Users/claudiu.roman"
         ];
-        finder.FXPreferredViewStyle = "clmv";
-        # loginwindow.GuestEnabled  = false;
-        # NSGlobalDomain.AppleICUForce24HourTime = true;
+        finder.FXPreferredViewStyle = "icnv";
         NSGlobalDomain.AppleInterfaceStyle = "Dark";
         # NSGlobalDomain.KeyRepeat = 2;
+
+
+        # Trackpad
+        trackpad.Clicking = true;
+        NSGlobalDomain."com.apple.trackpad.scaling" = 3;
+        trackpad.SecondClickThreshold = 0;
       };
 
       # Auto upgrade nix package and the daemon service.
