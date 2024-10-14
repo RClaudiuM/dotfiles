@@ -49,6 +49,7 @@
           "warp"
           "mongodb-compass"
           "microsoft-teams"
+          "figma"
         ];
         # masApps = {
         #   "Yoink" = 457622435;
@@ -83,10 +84,28 @@
         '';
 
 
-         system.defaults = {
+      system.defaults = {
         dock.autohide  = true;
-        # dock.persistent-apps = [
-        # ];
+        dock.orientation = "left";
+        dock.persistent-apps = [
+          # "${pkgs.alacritty}/Applications/Alacritty.app"
+          # "${pkgs.obsidian}/Applications/Obsidian.app"
+          "/Applications/Visual Studio Code.app"
+          "/Applications/Google Chrome.app"
+          "/Applications/Slack.app"
+          "/Applications/Microsoft Teams.app"
+          "/Applications/Microsoft Outlook.app"
+          "/Applications/MongoDB Compass.app"
+          "/System/Applications/Utilities/Terminal.app"
+          "/Applications/Figma.app"
+          "/Applications/Obsidian.app"
+          "/System/Applications/System Settings.app"
+          # "/System/Applications/Calendar.app"
+        ];
+        dock.persistent-others = [
+          "/Users/claudiu.roman/Downloads"
+          "/Users/claudiu.roman"
+        ];
         finder.FXPreferredViewStyle = "clmv";
         # loginwindow.GuestEnabled  = false;
         # NSGlobalDomain.AppleICUForce24HourTime = true;
