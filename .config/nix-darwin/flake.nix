@@ -122,9 +122,6 @@
         NSGlobalDomain."com.apple.trackpad.forceClick" = true;
         NSGlobalDomain."com.apple.trackpad.scaling" = 3.0;
         trackpad.SecondClickThreshold = 0;
-        touchpad.naturalScrolling = false;
-        mouse.naturalScrolling = false;
-        touchpad.tapping = true
       };
 
       # Auto upgrade nix package and the daemon service.
