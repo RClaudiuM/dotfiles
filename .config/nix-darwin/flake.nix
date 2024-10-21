@@ -50,6 +50,7 @@
           "mongodb-compass"
           "microsoft-teams"
           "figma"
+          "notion"
         ];
         # masApps = {
         #   "Yoink" = 457622435;
@@ -106,6 +107,9 @@
           "/Applications/Figma.app"
           "/Applications/Obsidian.app"
           "/System/Applications/System Settings.app"
+          "/Applications/Notion.app"
+          "/Applications/Postman.app"
+          "/Applications/Chrome Apps.localized/Google Meet.app"
           # "/System/Applications/Calendar.app"
         ];
         dock.persistent-others = [

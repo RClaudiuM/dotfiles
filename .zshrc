@@ -40,7 +40,6 @@ zinit snippet OMZP::git
 zinit snippet OMZP::yarn
 zinit snippet OMZP::sudo
 zinit snippet OMZP::aws
-zinit snippet OMZP::command-not-found
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -76,6 +75,8 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 # zoxide style
 # zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+
 
 # Aliases
 alias ls='ls --color'
