@@ -1,0 +1,13 @@
+# Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
+
+# for a list of all available themes
+
+#--theme="Visual Studio Dark+"
+
+# Show line numbers and, when outputting noncontiguous line ranges, a divider
+
+--style=numbers,snip
+
+# Use italic text, which is not supported in all terminals
+
+--italic-text=always
