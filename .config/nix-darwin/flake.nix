@@ -31,13 +31,15 @@
           "fish"
           "fzf"
           "hashicorp/tap/terraform"
-          "mongodb/brew/mongodb-community"
+          "mongodb/brew/mongodb-community"~
           "nvm"
           "redis"
           "starship"
           "stow"
           "typescript"
           "gh"
+          "bat"
+          "fd"
         ];
         casks = [
           "font-fira-code-nerd-font"
@@ -110,7 +112,8 @@
           "/System/Applications/System Settings.app"
           "/Applications/Notion.app"
           "/Applications/Postman.app"
-          "/Applications/Chrome Apps.localized/Google Meet.app"
+          "/Applications/MeetInOne.app"
+          # "/Applications/Chrome Apps.localized/Google Meet.app"
           # "/System/Applications/Calendar.app"
         ];
         dock.persistent-others = [

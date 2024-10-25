@@ -56,7 +56,7 @@ zinit cdreplay -q
 # bindkey '^[w' kill-region
 
 # History
-HISTSIZE=5000
+HISTSIZE=2000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
