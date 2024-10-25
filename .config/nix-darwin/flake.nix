@@ -37,6 +37,7 @@
           "starship"
           "stow"
           "typescript"
+          "gh"
         ];
         casks = [
           "font-fira-code-nerd-font"
@@ -51,7 +52,6 @@
           "microsoft-teams"
           "figma"
           "notion"
-          "gh"
         ];
         # masApps = {
         #   "Yoink" = 457622435;
