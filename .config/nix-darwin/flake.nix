@@ -31,7 +31,7 @@
           "fish"
           "fzf"
           "hashicorp/tap/terraform"
-          "mongodb/brew/mongodb-community"~
+          "mongodb/brew/mongodb-community"
           "nvm"
           "redis"
           "starship"
@@ -39,7 +39,6 @@
           "typescript"
           "gh"
           "bat"
-          "fd"
         ];
         casks = [
           "font-fira-code-nerd-font"
