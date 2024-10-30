@@ -1,3 +1,5 @@
+[TOC]
+
 # My dotfiles
 
 In order to be able to conveniently manage my dotfiles I've decided that they will from now on live on this repository inside GitHub.
@@ -207,3 +209,7 @@ darwin-rebuild switch --flake ~/dotfiles/.config/nix-darwin#{userName}
 ## Nix packages and settings
 
 You can find more information about nix packages and settings on the following [website](https://mynixos.com/nixpkgs).
+
+# Tips and tricks
+
+TBD...
