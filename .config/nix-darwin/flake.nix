@@ -54,6 +54,7 @@
           "microsoft-teams"
           "figma"
           "notion"
+          "discord"
         ];
         # masApps = {
         #   "Yoink" = 457622435;
