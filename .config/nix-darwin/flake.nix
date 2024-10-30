@@ -39,6 +39,7 @@
           "typescript"
           "gh"
           "bat"
+          "sonar-scanner"
         ];
         casks = [
           "font-fira-code-nerd-font"

@@ -81,7 +81,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
 
 # Aliases
-alias kkk='code $(fzf --preview="bat --color=always {}")'
+# alias kkk='code $(fzf --preview="bat --color=always {}")'
 alias ls='ls --color'
 alias c='clear'
 
