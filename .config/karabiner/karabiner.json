@@ -1,0 +1,100 @@
+{
+  "global": {
+    "check_for_updates_on_startup": false,
+    "enable_notification_window": false
+  },
+  "profiles": [
+    {
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Remap section sign (§) to backtick (`) + plus minus (±) to tilde (~) in English keyboards",
+            "enabled": false,
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "input_sources": [{ "language": "^en$" }],
+                    "type": "input_source_if"
+                  }
+                ],
+                "from": { "key_code": "non_us_backslash" },
+                "to": [{ "key_code": "grave_accent_and_tilde" }],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "input_sources": [{ "language": "^en$" }],
+                    "type": "input_source_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "non_us_backslash",
+                  "modifiers": { "mandatory": ["option"] }
+                },
+                "to": [
+                  {
+                    "key_code": "grave_accent_and_tilde",
+                    "modifiers": ["option"]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "input_sources": [{ "language": "^en$" }],
+                    "type": "input_source_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "non_us_backslash",
+                  "modifiers": {
+                    "mandatory": ["shift"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "grave_accent_and_tilde",
+                    "modifiers": ["shift"]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
+        {
+          "identifiers": { "is_keyboard": true },
+          "manipulate_caps_lock_led": false
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 50489,
+            "vendor_id": 1133
+          },
+          "ignore": true
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 50504,
+            "vendor_id": 1133
+          },
+          "ignore": true
+        }
+      ],
+      "name": "Default profile",
+      "selected": true,
+      "virtual_hid_keyboard": {
+        "indicate_sticky_modifier_keys_state": false,
+        "keyboard_type_v2": "iso"
+      }
+    }
+  ]
+}
