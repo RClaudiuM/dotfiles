@@ -57,7 +57,7 @@
           "figma"
           "notion"
           "discord"
-          "logi-options+"
+          # "logi-options+"
         ];
         # masApps = {
         #   "Yoink" = 457622435;
