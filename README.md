@@ -125,6 +125,10 @@ Then after exporting the database you will need to copy it to the new machine's 
 mongorestore ~/Desktop/mongo-migration/ --host 127.0.0.1:27017
 ```
 
+### Mongodb config file and data directory locations
+
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#installing-mongodb-8.0-edition-edition
+
 ## Dotfiles installation
 
 First, check out the dotfiles repo in your $HOME directory using git
