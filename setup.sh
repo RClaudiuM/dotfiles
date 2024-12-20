@@ -15,4 +15,4 @@ else
 fi
 
 # Run stow .
-stow . --adopt
+stow . --override
