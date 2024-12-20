@@ -14,5 +14,11 @@ else
     echo "GNU Stow is already installed"
 fi
 
+# Remove existing .zshrc file
+if [ -f ~/.zshrc ]; then
+    echo "Removing existing ~/.zshrc file"
+    rm ~/.zshrc
+fi
+
 # Run stow .
-stow . --adopt --override
+stow . 
