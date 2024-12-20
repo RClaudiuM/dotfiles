@@ -21,6 +21,7 @@
         [ pkgs.vim
           # pkgs.kanata
           pkgs.mkalias
+          pkgs.gh
         ];
 
         homebrew = {
@@ -39,7 +40,7 @@
           "starship"
           "stow"
           "typescript"
-          "gh"
+          # "gh"
           "bat"
           "sonar-scanner"
         ];
