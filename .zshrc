@@ -105,7 +105,7 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --r
 # eval "$(fzf --zsh)"
 
 # Check if we're on Linux
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+if [[ "$OSTYPE" != "linux-gnu"* ]]; then
     eval "$(fzf --zsh)"
 fi
 
