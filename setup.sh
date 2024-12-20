@@ -19,14 +19,6 @@ else
     echo "GNU Stow is already installed"
 fi
 
-# Install fzf if not present and on Linux
-if [[ "$OSTYPE" == "linux-gnu"* ]] && ! command_exists fzf; then
-    echo "Installing fzf..."
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
-elif [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists fzf; then
-    echo "fzf is already installed"
-fi
 
 # Remove existing .zshrc file
 if [ -f ~/.zshrc ]; then

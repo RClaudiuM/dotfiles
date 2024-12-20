@@ -102,7 +102,13 @@ alias ybsd="yarn be start:debug"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222"
 
 # Shell integrations
-eval "$(fzf --zsh)"
+# eval "$(fzf --zsh)"
+
+# Check if we're on Linux
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    eval "$(fzf --zsh)"
+fi
+
 # eval "$(zoxide init --cmd cd zsh)"
 
  export NVM_DIR="$HOME/.nvm"
