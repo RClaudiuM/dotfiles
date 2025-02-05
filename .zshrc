@@ -38,10 +38,7 @@ zinit light Aloxaf/fzf-tab
 # Add in snippets
 zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
-zinit snippet OMZP::yarn
 zinit snippet OMZP::sudo
-zinit snippet OMZP::aws
-# zinit snippet OMZP::docker
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -93,13 +90,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# Easier yarn scripts for react-nest monorepos
-alias ycsd="yarn catalog-api start:debug"
-alias yfd="yarn fe develop"
-alias ybsd="yarn be start:debug"
 
-# Open chrome with remote debug port
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222"
 
 # Shell integrations
 # eval "$(fzf --zsh)"
@@ -115,25 +106,4 @@ fi
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-# Enable auto node version set
-#   nvm_auto_use() {
-#   local node_version="$(nvm version)"
-#   local nvmrc_path="$(nvm_find_nvmrc)"
 
-#   if [ -n "$nvmrc_path" ]; then
-#     local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-#     if [ "$nvmrc_node_version" = "N/A" ]; then
-#       nvm install
-#     elif [ "$nvmrc_node_version" != "$node_version" ]; then
-#       nvm use --silent
-#     fi
-#   elif [ "$node_version" != "$(nvm version default)" ]; then
-#     echo "Reverting to nvm default version"
-#     nvm use default
-#   fi
-# }
-# add-zsh-hook chpwd nvm_auto_use
-# nvm_auto_use
-
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
