@@ -115,6 +115,8 @@ fi
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
+
+
 # Enable auto node version set
 #   nvm_auto_use() {
 #   local node_version="$(nvm version)"
@@ -136,4 +138,7 @@ fi
 # add-zsh-hook chpwd nvm_auto_use
 # nvm_auto_use
 
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"

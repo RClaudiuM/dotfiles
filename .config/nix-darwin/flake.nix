@@ -26,10 +26,9 @@
 
         homebrew = {
         enable = true;
-
         brews = [
           "awscli"
-          "corepack"
+          # "corepack"
           "deno"
           "fish"
           "fzf"
@@ -40,6 +39,12 @@
           "starship"
           "stow"
           # "typescript"
+          "openssl"
+          "readline"
+          "sqlite3"
+          "xz"
+          "zlib"
+          "tcl-tk@8"
           "pyenv"
           "gh"
           "bat"
@@ -53,7 +58,7 @@
           "karabiner-elements"
           "visual-studio-code"
           "keycombiner"
-          "warp"
+          # "warp"
           "mongodb-compass"
           "microsoft-teams"
           "figma"
@@ -68,6 +73,15 @@
         onActivation.autoUpdate = true;
         onActivation.upgrade = true;
       };
+
+      # Add this section before the homebrew configuration
+      system.activationScripts.preActivation.text = ''
+        echo "Removing Homebrew Node.js installation..."
+        if [ -f "/opt/homebrew/bin/node" ]; then
+          /opt/homebrew/bin/brew uninstall --ignore-dependencies node || true
+        fi
+      '';
+
 
       fonts.packages = [
         (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
@@ -217,7 +231,6 @@
             enableRosetta = true;
             # User owning the Homebrew prefix
             user = "claudiu.roman";
-
             autoMigrate = true;
           };
         }
