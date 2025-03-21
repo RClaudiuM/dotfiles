@@ -64,6 +64,7 @@
           "figma"
           "notion"
           "discord"
+          "affine"
           # "logi-options+"
         ];
         # masApps = {
