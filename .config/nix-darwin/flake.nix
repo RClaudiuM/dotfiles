@@ -6,9 +6,23 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+
+    # Optional: Declarative tap management
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle }:
   let
     configuration = { pkgs, config, ... }: {
 
@@ -26,6 +40,13 @@
 
         homebrew = {
         enable = true;
+
+        taps = [
+          "homebrew/bundle"
+          "homebrew/cask"
+          "homebrew/core"
+        ];
+
         brews = [
           "awscli"
           # "corepack"
@@ -51,7 +72,7 @@
           "sonar-scanner"
         ];
         casks = [
-          "font-fira-code-nerd-font"
+          # "font-fira-code-nerd-font"
           "mos"
           "font-hack-nerd-font"
           "obsidian"
@@ -83,9 +104,15 @@
         fi
       '';
 
+      # Deprecated
+      # fonts.packages = [
+      #   (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      # ];
 
       fonts.packages = [
-        (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+        pkgs.nerd-fonts.jetbrains-mono
+        pkgs.nerd-fonts.fira-code
+        # Add other fonts as needed
       ];
 
       system.activationScripts.applications.text = let
@@ -101,7 +128,7 @@
           rm -rf /Applications/Nix\ Apps
           mkdir -p /Applications/Nix\ Apps
           find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-          while read src; do
+          while read -r src; do
             app_name=$(basename "$src")
             echo "copying $src" >&2
             ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
@@ -154,7 +181,12 @@
       };
 
       # Auto upgrade nix package and the daemon service.
-      services.nix-daemon.enable = true;
+      # ! Deprecated
+      # services.nix-daemon.enable = true;
+
+      nix.enable = true;
+
+
       # nix.package = pkgs.nix;
 
       # Necessary for using flakes on this system.
@@ -172,7 +204,11 @@
       system.stateVersion = 5;
 
       # Enable touch id propmpt for sudo approval in the terminal
-      security.pam.enableSudoTouchIdAuth = true;
+      # ! Deprecated
+      # security.pam.enableSudoTouchIdAuth = true;
+
+      security.pam.services.sudo_local.touchIdAuth = true;
+
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
@@ -233,6 +269,15 @@
             # User owning the Homebrew prefix
             user = "claudiu.roman";
             autoMigrate = true;
+
+            mutableTaps = true;
+
+            taps = {
+              "homebrew/homebrew-core" = homebrew-core;
+              "homebrew/homebrew-cask" = homebrew-cask;
+              "homebrew/homebrew-bundle" = homebrew-bundle;
+            };
+
           };
         }
          ];
