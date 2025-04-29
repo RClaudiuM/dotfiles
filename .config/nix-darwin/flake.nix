@@ -73,6 +73,7 @@
               "redis"
               "starship"
               "stow"
+              # "exercism"
               # "typescript"
               "openssl"
               "readline"
