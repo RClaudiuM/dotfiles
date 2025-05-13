@@ -103,6 +103,7 @@
               "discord"
               # "affine"
               "pgadmin4"
+              "logitech-g-hub"
               # "linearmouse"
               # "dbeaver-community"
               # "logi-options+"
