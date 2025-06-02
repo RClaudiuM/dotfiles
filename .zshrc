@@ -28,13 +28,11 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Add in Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins - lazy load for better performance
-zinit light zsh-users/zsh-completions  # Load completions immediately
-zinit wait lucid for \
-    zsh-users/zsh-syntax-highlighting \
-    zsh-users/zsh-autosuggestions \
-    Aloxaf/fzf-tab
-# zinit light pierpo/fzf-docker
+# Add in zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
 
 # Add in snippets
 zinit snippet OMZL::git.zsh
