@@ -28,11 +28,12 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Add in Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+# Add in zsh plugins - lazy load for better performance
+zinit light zsh-users/zsh-completions  # Load completions immediately
+zinit wait lucid for \
+    zsh-users/zsh-syntax-highlighting \
+    zsh-users/zsh-autosuggestions \
+    Aloxaf/fzf-tab
 # zinit light pierpo/fzf-docker
 
 # Add in snippets
@@ -42,6 +43,13 @@ zinit snippet OMZP::yarn
 zinit snippet OMZP::sudo
 zinit snippet OMZP::aws
 # zinit snippet OMZP::docker
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/claudiu.roman/.docker/completions $fpath)
+# autoload -Uz compinit
+# compinit
+# End of Docker CLI completions
+
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -104,10 +112,6 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --r
 # Shell integrations
 # eval "$(fzf --zsh)"
 
-# Check if we're on Linux
-if [[ "$OSTYPE" != "linux-gnu"* ]]; then
-    eval "$(fzf --zsh)"
-fi
 
 # eval "$(zoxide init --cmd cd zsh)"
 
@@ -139,9 +143,11 @@ fi
 # nvm_auto_use
 
 
+# Pyenv setup (optimized - single initialization)
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 
 # Add Cargo binaries to PATH
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -155,10 +161,4 @@ if [[ -d ~/.config/scripts ]]; then
     done
 fi
 
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/claudiu.roman/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
+
