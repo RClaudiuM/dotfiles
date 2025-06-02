@@ -48,6 +48,7 @@
             # pkgs.kanata
             pkgs.mkalias
             pkgs.rustup
+            pkgs.raycast
             pkgs.nixfmt-rfc-style # Added nixfmt for formatting Nix files
           ];
 
@@ -84,7 +85,7 @@
               "pyenv"
               "gh"
               "bat"
-              "sonar-scanner"
+              # "sonar-scanner"
             ];
             casks = [
               # "font-fira-code-nerd-font"
@@ -103,10 +104,12 @@
               "discord"
               # "affine"
               "pgadmin4"
-              "logitech-g-hub"
+              # "logitech-g-hub"
               # "linearmouse"
               # "dbeaver-community"
               # "logi-options+"
+              # "orbstack"
+
             ];
             # masApps = {
             #   "Yoink" = 457622435;

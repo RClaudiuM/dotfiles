@@ -148,6 +148,17 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 
+# Source custom scripts (only if directory exists)
+if [[ -d ~/.config/scripts ]]; then
+    for script in ~/.config/scripts/*.sh; do
+        [[ -r "$script" ]] && source "$script"
+    done
+fi
 
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/claudiu.roman/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
