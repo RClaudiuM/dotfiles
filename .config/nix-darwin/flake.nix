@@ -5,22 +5,22 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    # nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-    nix-homebrew.url = "git+https://github.com/zhaofengli/nix-homebrew?ref=refs/pull/71/merge";
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    # nix-homebrew.url = "git+https://github.com/zhaofengli/nix-homebrew?ref=refs/pull/71/merge";
 
-    # Optional: Declarative tap management
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      # flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      # flake = false;
-    };
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      # flake = false;
-    };
+    # # Optional: Declarative tap management
+    # homebrew-core = {
+    #   url = "github:homebrew/homebrew-core";
+    #   # flake = false;
+    # };
+    # homebrew-cask = {
+    #   url = "github:homebrew/homebrew-cask";
+    #   # flake = false;
+    # };
+    # homebrew-bundle = {
+    #   url = "github:homebrew/homebrew-bundle";
+    #   # flake = false;
+    # };
   };
 
   outputs =
@@ -29,9 +29,9 @@
       nix-darwin,
       nixpkgs,
       nix-homebrew,
-      homebrew-core,
-      homebrew-cask,
-      homebrew-bundle,
+      # homebrew-core,
+      # homebrew-cask,
+      # homebrew-bundle,
     }:
     let
       configuration =
@@ -48,6 +48,8 @@
             # pkgs.kanata
             pkgs.mkalias
             pkgs.rustup
+            pkgs.awscli2
+            pkgs.localsend # Config
             pkgs.raycast
             pkgs.nixfmt-rfc-style # Added nixfmt for formatting Nix files
           ];
@@ -62,7 +64,7 @@
             ];
 
             brews = [
-              "awscli"
+              # "awscli"
               # "corepack"
               "deno"
               "fish"
@@ -106,7 +108,7 @@
               "pgadmin4"
               # "logitech-g-hub"
               # "linearmouse"
-              # "dbeaver-community"
+              "dbeaver-community"
               # "logi-options+"
               # "orbstack"
 
@@ -119,18 +121,20 @@
             onActivation.upgrade = true;
           };
 
-          system.activationScripts.postUserActivation.text = ''
-            echo "==============================================="
-            echo "Checking for Homebrew Node.js installation..."
-            if [ -f "/opt/homebrew/bin/node" ]; then
-              echo "Node.js found, attempting to remove..."
-              # Run as the current user instead of root
-              sudo -u "$USER" /opt/homebrew/bin/brew uninstall --ignore-dependencies node || echo "Failed to uninstall Node.js"
-            else
-              echo "Node.js not found in Homebrew"
-            fi
-            echo "==============================================="
-          '';
+          system.activationScripts.removeHomebrewNode = {
+            text = ''
+              echo "==============================================="
+              echo "Checking for Homebrew Node.js installation..."
+              if [ -f "/opt/homebrew/bin/node" ]; then
+                echo "Node.js found, attempting to remove..."
+                sudo -u "${config.system.primaryUser}" /opt/homebrew/bin/brew uninstall --ignore-dependencies node || echo "Failed to uninstall Node.js"
+              else
+                echo "Node.js not found in Homebrew"
+              fi
+              echo "==============================================="
+            '';
+            deps = [ "users" "groups" ];
+          };
 
           system.activationScripts.rustSetup = {
             text = ''
@@ -221,7 +225,7 @@
               # "/Applications/Obsidian.app"
               "/Applications/Notion.app"
               "/Applications/Postman.app"
-              "/Applications/MeetInOne.app"
+              # "/Applications/MeetInOne.app"
               # "/Applications/Chrome Apps.localized/Google Meet.app"
               # "/System/Applications/Calendar.app"
             ];
@@ -245,6 +249,8 @@
           # services.nix-daemon.enable = true;
 
           nix.enable = true;
+          
+
 
           # nix.package = pkgs.nix;
 
@@ -261,6 +267,8 @@
           # Used for backwards compatibility, please read the changelog before changing.
           # $ darwin-rebuild changelog
           system.stateVersion = 5;
+          system.activationScripts.systemActivation.enable = true;
+          system.primaryUser = "claudiu.roman";
 
           # Enable touch id prompt for sudo approval in the terminal
           # ! Deprecated
@@ -326,14 +334,13 @@
               # User owning the Homebrew prefix
               user = "claudiu.roman";
               autoMigrate = true;
-
               mutableTaps = true;
 
-              taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-                "homebrew/homebrew-bundle" = homebrew-bundle;
-              };
+              # taps = {
+              #   "homebrew/homebrew-core" = homebrew-core;
+              #   "homebrew/homebrew-cask" = homebrew-cask;
+              #   "homebrew/homebrew-bundle" = homebrew-bundle;
+              # };
 
             };
           }
