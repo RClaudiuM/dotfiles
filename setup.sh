@@ -213,7 +213,6 @@ EOF
             
         "arch")
             echo -e "${BLUE}🏗️  Setting up Arch Linux configuration...${NC}"
-            echo -e "${YELLOW}💡 Consider switching to NixOS with: ./archNixOS/setup.sh${NC}"
             
             # Stow shared scripts
             echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
