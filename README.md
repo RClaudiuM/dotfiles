@@ -1,16 +1,81 @@
 [TOC]
 
-# My dotfiles
+# Cross-Platform Dotfiles
 
-In order to be able to conveniently manage my dotfiles I've decided that they will from now on live on this repository inside GitHub.
+Cross-platform dotfiles management with **GNU Stow** and **platform detection**. One repository for all my development environments:
 
-With the help of [STOW](https://www.gnu.org/software/stow/) I can apply them nicely in my machine.
+- 🍎 **macOS** (nix-darwin + Homebrew)
+- 🐳 **Dev Containers** (lightweight setup)
+- **Arch Linux / NixOS** coming soon.... i hope
 
-This repository also contains a nix flake configuration file that will be used to spin up dev environments.
+## Quick Setup
 
-For that you can check out the [Using Nix and nix-darwin to spin up dev environments](#using-nix) section.
+**One command works everywhere:**
 
-If not, below are some steps to manually set up a dev environment on a mac machine.
+```bash
+git clone https://github.com/RClaudiuM/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+chmod +x setup.sh
+./setup.sh
+```
+
+The script will:
+
+1. 🔍 **Auto-detect your platform** (macOS/DevContainer)
+2. 📦 **Install GNU Stow** if needed
+3. 🔗 **Stow shared configurations** (scripts, fzf config)
+4. 🛠️ **Install shared tools** (Oh My Bash, fzf, custom scripts)
+5. ⚙️ **Stow platform-specific configs** (.zshrc, .p10k.zsh, etc.)
+6. 🚀 **Run platform-specific setup** (nix-darwin on macOS)
+
+## Repository Structure
+
+```
+dotfiles/
+├── setup.sh                    # Universal setup script
+├── shared/                     # Shared across all platforms
+│   ├── .config/
+│   │   ├── scripts/            # Custom shell scripts
+│   │   └── fzf                 # fzf configuration
+│   ├── setup-bash.sh          # Tool installer (Oh My Bash, fzf, etc.)
+│   └── theme.sh               # Oh My Bash theme
+├── macos/                     # macOS-specific configs
+│   ├── .zshrc                 # macOS zsh configuration
+│   ├── .p10k.zsh             # Powerlevel10k config
+│   ├── .bash_profile         # macOS bash profile
+│   ├── .config/
+│   │   ├── nix-darwin/       # nix-darwin configuration
+│   │   ├── karabiner/        # Keyboard remapping
+│   │   ├── fish/             # Fish shell config
+│   │   └── gh/               # GitHub CLI config
+│   └── setup.sh              # macOS-specific setup
+└── devcontainer/              # Dev container configs
+    ├── .zshrc                 # Container-optimized zsh
+    └── setup.sh               # Container-specific setup
+```
+
+---
+
+## Manual Platform Setup
+
+If you prefer to run platform-specific setup manually:
+
+### macOS
+
+```bash
+stow shared macos
+source shared/setup-bash.sh
+source macos/setup.sh
+```
+
+### Dev Container
+
+```bash
+stow shared devcontainer
+source shared/setup-bash.sh
+```
+
+---
 
 ## Git installation
 
@@ -131,17 +196,36 @@ https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#installing
 
 ## Dotfiles installation
 
+**Quick Setup (Recommended):**
+
+```bash
+git clone https://github.com/RClaudiuM/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+chmod +x setup.sh
+./setup.sh
+```
+
+**Manual Setup:**
+
 First, check out the dotfiles repo in your $HOME directory using git
 
 ```bash
-git clone https://github.com/RClaudiuM/dotfiles.git
-cd dotfiles
+git clone https://github.com/RClaudiuM/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ```
 
-then use GNU stow to create symlinks
+then use GNU stow to create symlinks based on your platform:
+
+For macOS:
 
 ```bash
-stow .
+stow shared macos
+```
+
+For dev containers:
+
+```bash
+stow shared devcontainer
 ```
 
 # Using Nix and nix-darwin to spin up dev environments {#using-nix}
@@ -178,17 +262,15 @@ nix-shell -p neofetch --run neofetch
 
 ## Update user profile
 
-In the [flake config file](.config/nix-darwin/flake.nix) you will need to rename the user set in the file to your current user.
+In the [flake config file](macos/.config/nix-darwin/flake.nix) you will need to rename the user set in the file to your current user.
 
 ## Running the flake
 
 You can run the flake by running the following command in your terminal
 
 ```bash
-nix run nix-darwin --experimental-features "nix-command flakes" -- switch --flake ~/dotfiles/nix-darwin#{userName}
+nix run nix-darwin --experimental-features "nix-command flakes" -- switch --flake ~/dotfiles/macos/.config/nix-darwin#clawMacOS
 ```
-
-Replace userName with your current user name.
 
 ## Verify darwin
 
@@ -207,8 +289,10 @@ You can now update the flake config to your liking be installing packages and ma
 Once you're ready to apply the changes you can run the following command
 
 ```bash
-darwin-rebuild switch --flake ~/dotfiles/.config/nix-darwin#{userName}
+sudo darwin-rebuild switch --flake ~/dotfiles/macos/.config/nix-darwin#clawMacOS --verbose
 ```
+
+**Note:** Recent versions of nix-darwin require sudo and the full flake path with configuration name.
 
 ## Nix packages and settings
 
