@@ -45,7 +45,13 @@ install_stow() {
                 fi
                 ;;
             "devcontainer"|"linux")
-                sudo apt-get update && sudo apt-get install -y stow
+                # Try with sudo first, fall back to direct apt-get if sudo doesn't exist
+                if command_exists sudo; then
+                    sudo apt-get update && sudo apt-get install -y stow
+                else
+                    echo -e "${YELLOW}No sudo found, trying direct package installation...${NC}"
+                    apt-get update && apt-get install -y stow
+                fi
                 ;;
             *)
                 echo -e "${RED}ERROR: Unknown platform for stow installation${NC}"
@@ -56,7 +62,6 @@ install_stow() {
         echo -e "${GREEN}✅ GNU Stow is already installed${NC}"
     fi
 }
-
 # Main installation function
 main() {
     echo -e "${BLUE}Platform detected: $PLATFORM${NC}"
