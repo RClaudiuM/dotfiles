@@ -59,13 +59,6 @@ install_stow() {
             "arch")
                 sudo pacman -S --noconfirm stow
                 ;;
-            "nixos")
-                # NixOS should have stow from configuration.nix
-                echo -e "${YELLOW}⚠️  Stow should be installed via NixOS configuration${NC}"
-                if ! command_exists stow; then
-                    nix-shell -p stow --run "echo 'Using stow from nix-shell'"
-                fi
-                ;;
             *)
                 echo -e "${RED}ERROR: Unknown platform for stow installation${NC}"
                 exit 1
@@ -186,29 +179,16 @@ setup_devcontainer() {
     
     # Run shared bash setup for tool installation (creates Oh My Bash .bashrc)
     run_shared_bash_setup
-    
-    # If Oh My Bash created a .bashrc and we don't have one in the repo yet, copy it
-    if [ -f ~/.bashrc ] && [ ! -f "devcontainer/.bashrc" ]; then
-        echo -e "${BLUE}📋 Creating devcontainer/.bashrc from Oh My Bash template...${NC}"
-        mkdir -p devcontainer
-        cp ~/.bashrc devcontainer/.bashrc
-        echo "✅ Created devcontainer/.bashrc template from Oh My Bash"
-        echo -e "${YELLOW}� You can now edit devcontainer/.bashrc in your repo and run setup again${NC}"
+
+    echo -e "${BLUE}📋 Copying shared scripts from shared/.config/scripts...${NC}"
+    mkdir -p ~/.config/scripts
+    if [ -d "shared/.config/scripts" ]; then
+        cp shared/.config/scripts/*.sh ~/.config/scripts/
     fi
-    
-    # Remove the generated .bashrc so we can stow our own
-    [ -f ~/.bashrc ] && rm ~/.bashrc
-    
-    # Stow shared scripts
-    echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-    stow -t ~ shared
-    
-    # Stow devcontainer-specific dotfiles (our customized .bashrc)
-    if [ -d "devcontainer" ]; then
-        echo -e "${BLUE}📦 Stowing devcontainer dotfiles...${NC}"
-        stow -t ~ devcontainer
-    fi
-    
+
+    # Enhance the generated .bashrc with customizations
+    enhance_bashrc_template
+
     # Add common aliases to .bashrc
     add_common_aliases ~/.bashrc
 }
