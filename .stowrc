@@ -4,3 +4,5 @@
 --ignore=README.md
 --ignore=.git
 --ignore=.gitignore
+--ignore=setup-bash.sh
+--ignore=theme.sh

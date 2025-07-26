@@ -95,6 +95,159 @@ add_common_aliases() {
         fi
     fi
 }
+
+# Run shared bash setup
+run_shared_bash_setup() {
+    echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
+    if [ -f "shared/setup-bash.sh" ]; then
+        chmod +x "shared/setup-bash.sh"
+        source "shared/setup-bash.sh"
+    fi
+}
+
+# Enhance Oh My Bash .bashrc with our customizations
+enhance_bashrc_template() {
+    local bashrc_path="$HOME/.bashrc"
+    
+    if [ -f "$bashrc_path" ]; then
+        echo -e "${BLUE}🔧 Enhancing $bashrc_path with custom configurations...${NC}"
+        
+        # Add script sourcing if not already present
+        if ! grep -q "Source shared utility scripts" "$bashrc_path"; then
+            cat >> "$bashrc_path" << 'EOF'
+
+# Source shared utility scripts
+for script in ~/.config/scripts/*.sh; do
+    [ -f "$script" ] && source "$script"
+done
+
+# Source fzf integration
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.fzf-git.sh ] && source ~/.fzf-git.sh
+EOF
+            echo "✅ Added script sourcing to $bashrc_path"
+        fi
+        
+        # Add our custom aliases if not present
+        if ! grep -q "alias gstu=" "$bashrc_path"; then
+            cat >> "$bashrc_path" << 'EOF'
+
+# Custom git aliases
+alias gstu='git stash --include-untracked'
+alias gstaa='git stash apply'
+EOF
+            echo "✅ Added custom aliases to $bashrc_path"
+        fi
+    fi
+}
+
+# macOS setup function
+setup_macos() {
+    echo -e "${BLUE}🍎 Setting up macOS configuration...${NC}"
+    
+    # Remove existing dotfiles that might conflict
+    [ -f ~/.zshrc ] && rm ~/.zshrc
+    [ -f ~/.p10k.zsh ] && rm ~/.p10k.zsh
+    [ -f ~/.bashrc ] && rm ~/.bashrc
+
+    # Stow shared scripts first
+    echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
+    stow -t ~ shared
+
+    # Run shared bash setup for tool installation (creates Oh My Bash .bashrc)
+    run_shared_bash_setup
+
+    # If Oh My Bash created a .bashrc and we don't have one in the repo yet, copy it
+    if [ -f ~/.bashrc ] && [ ! -f "macos/.bashrc" ]; then
+        echo -e "${BLUE}📋 Creating macos/.bashrc from Oh My Bash template...${NC}"
+        mkdir -p macos
+        cp ~/.bashrc macos/.bashrc
+        enhance_bashrc_template
+        echo "✅ Created enhanced macos/.bashrc template"
+        echo -e "${YELLOW}💡 You can now edit macos/.bashrc in your repo and run setup again${NC}"
+    fi
+
+    # Remove the generated .bashrc so we can stow our own
+    [ -f ~/.bashrc ] && rm ~/.bashrc
+
+    # Stow macOS-specific dotfiles (our customized .bashrc)
+    if [ -d "macos" ]; then
+        echo -e "${BLUE}📦 Stowing macOS dotfiles...${NC}"
+        stow -t ~ macos
+    fi
+
+    # Add common aliases to .bashrc
+    add_common_aliases ~/.bashrc
+}
+
+# Devcontainer setup function
+setup_devcontainer() {
+    echo -e "${BLUE}🐳 Setting up dev container configuration...${NC}"
+    
+    # Run shared bash setup for tool installation (creates Oh My Bash .bashrc)
+    run_shared_bash_setup
+    
+    # If Oh My Bash created a .bashrc and we don't have one in the repo yet, copy it
+    if [ -f ~/.bashrc ] && [ ! -f "devcontainer/.bashrc" ]; then
+        echo -e "${BLUE}📋 Creating devcontainer/.bashrc from Oh My Bash template...${NC}"
+        mkdir -p devcontainer
+        cp ~/.bashrc devcontainer/.bashrc
+        echo "✅ Created devcontainer/.bashrc template from Oh My Bash"
+        echo -e "${YELLOW}� You can now edit devcontainer/.bashrc in your repo and run setup again${NC}"
+    fi
+    
+    # Remove the generated .bashrc so we can stow our own
+    [ -f ~/.bashrc ] && rm ~/.bashrc
+    
+    # Stow shared scripts
+    echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
+    stow -t ~ shared
+    
+    # Stow devcontainer-specific dotfiles (our customized .bashrc)
+    if [ -d "devcontainer" ]; then
+        echo -e "${BLUE}📦 Stowing devcontainer dotfiles...${NC}"
+        stow -t ~ devcontainer
+    fi
+    
+    # Add common aliases to .bashrc
+    add_common_aliases ~/.bashrc
+}
+
+
+# Arch Linux setup function
+setup_arch() {
+    echo -e "${BLUE}🏗️  Setting up Arch Linux configuration...${NC}"
+    
+    # Run shared bash setup first (creates Oh My Bash .bashrc)
+    run_shared_bash_setup
+    
+    # If Oh My Bash created a .bashrc and we don't have one in the repo yet, copy it
+    if [ -f ~/.bashrc ] && [ ! -f "arch/.bashrc" ]; then
+        echo -e "${BLUE}📋 Creating arch/.bashrc from Oh My Bash template...${NC}"
+        mkdir -p arch
+        cp ~/.bashrc arch/.bashrc
+        enhance_bashrc_template
+        echo "✅ Created enhanced arch/.bashrc template"
+        echo -e "${YELLOW}💡 You can now edit arch/.bashrc in your repo and run setup again${NC}"
+    fi
+    
+    # Remove the generated .bashrc so we can stow our own
+    [ -f ~/.bashrc ] && rm ~/.bashrc
+    
+    # Stow shared scripts
+    echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
+    stow -t ~ shared
+    
+    # Stow arch-specific dotfiles (our customized .bashrc)
+    if [ -d "arch" ]; then
+        echo -e "${BLUE}📦 Stowing Arch dotfiles...${NC}"
+        stow -t ~ arch
+    fi
+    
+    # Add common aliases to .bashrc
+    add_common_aliases ~/.bashrc
+}
+
 # Main installation function
 main() {
     echo -e "${BLUE}Platform detected: $PLATFORM${NC}"
@@ -105,130 +258,14 @@ main() {
     # Platform-specific setup
     case $PLATFORM in
         "macos")
-            echo -e "${BLUE}🍎 Setting up macOS configuration...${NC}"
-            
-            # Remove existing dotfiles that might conflict
-            [ -f ~/.zshrc ] && rm ~/.zshrc
-            [ -f ~/.p10k.zsh ] && rm ~/.p10k.zsh
-            [ -f ~/.bashrc ] && rm ~/.bashrc
-
-            # Stow shared scripts first
-            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-            stow -t ~ shared
-            
-            # Run shared bash setup for tool installation
-            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
-            if [ -f "shared/setup-bash.sh" ]; then
-                chmod +x "shared/setup-bash.sh"
-                source "shared/setup-bash.sh"
-            fi
-            
-            # Remove any bashrc created by Oh My Bash before stowing our own
-            [ -f ~/.bashrc ] && rm ~/.bashrc
-            
-            # Stow macOS-specific dotfiles
-            echo -e "${BLUE}📦 Stowing macOS dotfiles...${NC}"
-            stow -t ~ macos
-            
-            # Add common aliases to .bashrc
-            add_common_aliases ~/.bashrc
+            setup_macos
             ;;
-            
         "devcontainer")
-            echo -e "${BLUE}🐳 Setting up dev container configuration...${NC}"
-            
-            # Run shared bash setup for tool installation
-            echo -e "${BLUE}� Running shared tool setup...${NC}"
-            if [ -f "shared/setup-bash.sh" ]; then
-                chmod +x "shared/setup-bash.sh"
-                source "shared/setup-bash.sh"
-            fi
-            
-            # Copy shared scripts to accessible location instead of stowing
-            echo -e "${BLUE}� Setting up shared scripts...${NC}"
-            mkdir -p ~/.config/scripts
-            if [ -d "shared/.config/scripts" ]; then
-                cp -r shared/.config/scripts/* ~/.config/scripts/
-                chmod +x ~/.config/scripts/*.sh
-                echo "✅ Copied shared scripts to ~/.config/scripts"
-            fi
-            
-            # Copy fzf config if it exists
-            if [ -d "shared/.config/fzf" ]; then
-                mkdir -p ~/.config/fzf
-                cp -r shared/.config/fzf/* ~/.config/fzf/
-                echo "✅ Copied fzf configuration"
-            fi
-            
-            
-            # Source the shared configs in the shell configs
-            echo -e "${BLUE}� Setting up shell integration...${NC}"
-            
-            # Add sourcing to .bashrc if it exists
-            if [ -f ~/.bashrc ]; then
-                echo "" >> ~/.bashrc
-                echo "# Source shared utility scripts" >> ~/.bashrc
-                cat >> ~/.bashrc << 'EOF'
-for script in ~/.config/scripts/*.sh; do
-    [ -f "$script" ] && source "$script"
-done
-EOF
-                echo "✅ Added script sourcing to .bashrc"
-            fi
-            
-            # Add sourcing to .zshrc if it exists  
-            if [ -f ~/.zshrc ]; then
-                echo "" >> ~/.zshrc
-                echo "# Source shared utility scripts" >> ~/.zshrc
-                cat >> ~/.zshrc << 'EOF'
-for script in ~/.config/scripts/*.sh; do
-    [ -f "$script" ] && source "$script"
-done
-EOF
-                echo "✅ Added script sourcing to .zshrc"
-            fi
-            
-            # Add common aliases to .bashrc
-            add_common_aliases ~/.bashrc
+            setup_devcontainer
             ;;
-            
-        "nixos")
-            echo -e "${BLUE}❄️  Setting up NixOS configuration...${NC}"
-            echo -e "${YELLOW}💡 For initial NixOS setup, run: ./archNixOS/setup.sh${NC}"
-            
-            # Stow shared scripts
-            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-            stow -t ~ shared
-            
-            # Run shared bash setup for tool installation
-            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
-            if [ -f "shared/setup-bash.sh" ]; then
-                chmod +x "shared/setup-bash.sh"
-                source "shared/setup-bash.sh"
-            fi
-            
-            # Add common aliases to .bashrc
-            add_common_aliases ~/.bashrc
-            ;;
-            
         "arch")
-            echo -e "${BLUE}🏗️  Setting up Arch Linux configuration...${NC}"
-            
-            # Stow shared scripts
-            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-            stow -t ~ shared
-            
-            # Run shared bash setup for tool installation
-            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
-            if [ -f "shared/setup-bash.sh" ]; then
-                chmod +x "shared/setup-bash.sh"
-                source "shared/setup-bash.sh"
-            fi
-            
-            # Add common aliases to .bashrc
-            add_common_aliases ~/.bashrc
+            setup_arch
             ;;
-            
         *)
             echo -e "${RED}ERROR: Unsupported platform: $PLATFORM${NC}"
             exit 1
