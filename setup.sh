@@ -20,6 +20,10 @@ detect_platform() {
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         if [ -f /.dockerenv ] || grep -q 'container' /proc/1/cgroup 2>/dev/null; then
             echo "devcontainer"
+        elif [ -f /etc/nixos/configuration.nix ] || command -v nixos-rebuild >/dev/null 2>&1; then
+            echo "nixos"
+        elif [ -f /etc/arch-release ]; then
+            echo "arch"
         else
             echo "linux"
         fi
@@ -51,6 +55,16 @@ install_stow() {
                 ;;
             "linux")
                 sudo apt-get update && sudo apt-get install -y stow
+                ;;
+            "arch")
+                sudo pacman -S --noconfirm stow
+                ;;
+            "nixos")
+                # NixOS should have stow from configuration.nix
+                echo -e "${YELLOW}⚠️  Stow should be installed via NixOS configuration${NC}"
+                if ! command_exists stow; then
+                    nix-shell -p stow --run "echo 'Using stow from nix-shell'"
+                fi
                 ;;
             *)
                 echo -e "${RED}ERROR: Unknown platform for stow installation${NC}"
@@ -172,6 +186,44 @@ for script in ~/.config/scripts/*.sh; do
 done
 EOF
                 echo "✅ Added script sourcing to .zshrc"
+            fi
+            
+            # Add common aliases to .bashrc
+            add_common_aliases ~/.bashrc
+            ;;
+            
+        "nixos")
+            echo -e "${BLUE}❄️  Setting up NixOS configuration...${NC}"
+            echo -e "${YELLOW}💡 For initial NixOS setup, run: ./archNixOS/setup.sh${NC}"
+            
+            # Stow shared scripts
+            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
+            stow -t ~ shared
+            
+            # Run shared bash setup for tool installation
+            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
+            if [ -f "shared/setup-bash.sh" ]; then
+                chmod +x "shared/setup-bash.sh"
+                source "shared/setup-bash.sh"
+            fi
+            
+            # Add common aliases to .bashrc
+            add_common_aliases ~/.bashrc
+            ;;
+            
+        "arch")
+            echo -e "${BLUE}🏗️  Setting up Arch Linux configuration...${NC}"
+            echo -e "${YELLOW}💡 Consider switching to NixOS with: ./archNixOS/setup.sh${NC}"
+            
+            # Stow shared scripts
+            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
+            stow -t ~ shared
+            
+            # Run shared bash setup for tool installation
+            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
+            if [ -f "shared/setup-bash.sh" ]; then
+                chmod +x "shared/setup-bash.sh"
+                source "shared/setup-bash.sh"
             fi
             
             # Add common aliases to .bashrc
