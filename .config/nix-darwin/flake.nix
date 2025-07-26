@@ -52,6 +52,7 @@
             pkgs.localsend # Config
             pkgs.raycast
             pkgs.nixfmt-rfc-style # Added nixfmt for formatting Nix files
+            pkgs.brave
           ];
 
           homebrew = {
@@ -99,7 +100,7 @@
               "keycombiner"
               # "warp"
               "mongodb-compass"
-              "microsoft-teams"
+              # "microsoft-teams"
               "figma"
               "notion"
               # "notion-calendar"
@@ -215,7 +216,7 @@
               # "${pkgs.obsidian}/Applications/Obsidian.app"
               "/System/Applications/System Settings.app"
               "/Applications/Visual Studio Code.app"
-              "/Applications/Google Chrome.app"
+              "/Applications/Nix Apps/Brave Browser.app"
               "/Applications/Slack.app"
               "/Applications/Microsoft Teams.app"
               "/Applications/Microsoft Outlook.app"
