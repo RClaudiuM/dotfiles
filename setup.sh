@@ -33,6 +33,11 @@ echo -e "${GREEN}🚀 Setting up dotfiles for $PLATFORM...${NC}"
 
 # Install stow if not present
 install_stow() {
+    if [[ "$PLATFORM" == "devcontainer" ]]; then
+        echo -e "${BLUE}📦 Skipping stow installation in devcontainer (using direct file copying)${NC}"
+        return 0
+    fi
+    
     if ! command_exists stow; then
         echo -e "${BLUE}Installing GNU Stow...${NC}"
         case $PLATFORM in
@@ -44,14 +49,8 @@ install_stow() {
                     exit 1
                 fi
                 ;;
-            "devcontainer"|"linux")
-                # Try with sudo first, fall back to direct apt-get if sudo doesn't exist
-                if command_exists sudo; then
-                    sudo apt-get update && sudo apt-get install -y stow
-                else
-                    echo -e "${YELLOW}No sudo found, trying direct package installation...${NC}"
-                    apt-get update && apt-get install -y stow
-                fi
+            "linux")
+                sudo apt-get update && sudo apt-get install -y stow
                 ;;
             *)
                 echo -e "${RED}ERROR: Unknown platform for stow installation${NC}"
@@ -60,6 +59,26 @@ install_stow() {
         esac
     else
         echo -e "${GREEN}✅ GNU Stow is already installed${NC}"
+    fi
+}
+
+# Add common aliases to shell configs
+add_common_aliases() {
+    local shell_config="$1"
+    
+    if [ -f "$shell_config" ]; then
+        echo -e "${BLUE}🔗 Adding common aliases to $(basename "$shell_config")...${NC}"
+        
+        # Add aliases to shell config if not already present
+        if ! grep -q "alias gstu=" "$shell_config"; then
+            echo "alias gstu='git stash --include-untracked'" >> "$shell_config"
+            echo "✅ Added alias 'gstu' to $(basename "$shell_config")"
+        fi
+
+        if ! grep -q "alias gstaa=" "$shell_config"; then
+            echo "alias gstaa='git stash apply'" >> "$shell_config"
+            echo "✅ Added alias 'gstaa' to $(basename "$shell_config")"
+        fi
     fi
 }
 # Main installation function
@@ -96,27 +115,67 @@ main() {
             # Stow macOS-specific dotfiles
             echo -e "${BLUE}📦 Stowing macOS dotfiles...${NC}"
             stow -t ~ macos
+            
+            # Add common aliases to .bashrc
+            add_common_aliases ~/.bashrc
             ;;
             
         "devcontainer")
             echo -e "${BLUE}🐳 Setting up dev container configuration...${NC}"
             
-            # Stow shared scripts
-            echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-            stow -t ~ shared
-            
             # Run shared bash setup for tool installation
-            echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
+            echo -e "${BLUE}� Running shared tool setup...${NC}"
             if [ -f "shared/setup-bash.sh" ]; then
                 chmod +x "shared/setup-bash.sh"
                 source "shared/setup-bash.sh"
             fi
             
-            # Stow devcontainer-specific configs
-            if [ -d "devcontainer" ]; then
-                echo -e "${BLUE}📦 Stowing devcontainer configurations...${NC}"
-                stow -t ~ devcontainer
+            # Copy shared scripts to accessible location instead of stowing
+            echo -e "${BLUE}� Setting up shared scripts...${NC}"
+            mkdir -p ~/.config/scripts
+            if [ -d "shared/.config/scripts" ]; then
+                cp -r shared/.config/scripts/* ~/.config/scripts/
+                chmod +x ~/.config/scripts/*.sh
+                echo "✅ Copied shared scripts to ~/.config/scripts"
             fi
+            
+            # Copy fzf config if it exists
+            if [ -d "shared/.config/fzf" ]; then
+                mkdir -p ~/.config/fzf
+                cp -r shared/.config/fzf/* ~/.config/fzf/
+                echo "✅ Copied fzf configuration"
+            fi
+            
+            
+            # Source the shared configs in the shell configs
+            echo -e "${BLUE}� Setting up shell integration...${NC}"
+            
+            # Add sourcing to .bashrc if it exists
+            if [ -f ~/.bashrc ]; then
+                echo "" >> ~/.bashrc
+                echo "# Source shared utility scripts" >> ~/.bashrc
+                cat >> ~/.bashrc << 'EOF'
+for script in ~/.config/scripts/*.sh; do
+    [ -f "$script" ] && source "$script"
+done
+EOF
+                echo "✅ Added script sourcing to .bashrc"
+            fi
+            
+            # Add sourcing to .zshrc if it exists  
+            if [ -f ~/.zshrc ]; then
+                echo "" >> ~/.zshrc
+                echo "# Source shared utility scripts" >> ~/.zshrc
+                cat >> ~/.zshrc << 'EOF'
+for script in ~/.config/scripts/*.sh; do
+    [ -f "$script" ] && source "$script"
+done
+EOF
+                echo "✅ Added script sourcing to .zshrc"
+            fi
+            
+            # Add common aliases to .bashrc
+            add_common_aliases ~/.bashrc
             ;;
             
         *)

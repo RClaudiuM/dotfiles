@@ -65,10 +65,3 @@ alias l='ls -CF'
 # Git aliases
 alias gstu='git stash --include-untracked'
 alias gstaa='git stash apply'
-
-# Source custom scripts (only if directory exists)
-if [[ -d ~/.config/scripts ]]; then
-    for script in ~/.config/scripts/*.sh; do
-        [[ -r "$script" ]] && source "$script"
-    done
-fi

@@ -71,10 +71,12 @@ else
     echo "✅ fzf-git.sh is already installed"
 fi
 
-# Make scripts executable (they are already stowed to ~/.config/scripts/)
+# Make scripts executable (check both stowed and copied locations)
 if [ -d ~/.config/scripts ]; then
     chmod +x ~/.config/scripts/*.sh
-    echo "✅ Made stowed scripts executable"
+    echo "✅ Made scripts executable"
+else
+    echo "⚠️  Scripts directory not found at ~/.config/scripts"
 fi
 
 echo "✅ Shared tool setup complete!"
