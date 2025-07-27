@@ -6,3 +6,4 @@
 --ignore=.gitignore
 --ignore=setup-bash.sh
 --ignore=theme.sh
+--ignore=setup-arch.sh
