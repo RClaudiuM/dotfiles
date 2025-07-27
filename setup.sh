@@ -221,7 +221,7 @@ setup_arch() {
     # Stow arch-specific dotfiles (our customized .bashrc)
     if [ -d "arch" ]; then
         echo -e "${BLUE}📦 Stowing Arch dotfiles...${NC}"
-        stow -t ~ arch
+        stow --adopt -t ~ arch
     fi
     
     # Add common aliases to .bashrc
