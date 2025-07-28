@@ -108,6 +108,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
+alias killteamsaudio="sudo killall coreaudiod"
+
 # Easier yarn scripts for react-nest monorepos
 alias ycsd="yarn catalog-api start:debug"
 alias yfd="yarn fe develop"
