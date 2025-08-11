@@ -1,0 +1,7 @@
+[user]
+	name = Roman Claudiu
+	email = roman.claudiumihai@gmail.com
+[credential]
+	helper = osxkeychain
+[push]
+	autoSetupRemote = true

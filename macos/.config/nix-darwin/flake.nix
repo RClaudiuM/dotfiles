@@ -83,6 +83,7 @@
               "readline"
               "sqlite3"
               "xz"
+              "uv"
               "zlib"
               "tcl-tk@8"
               "pyenv"
