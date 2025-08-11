@@ -110,11 +110,6 @@ alias .....="cd ../../../.."
 
 alias killteamsaudio="sudo killall coreaudiod"
 
-# Easier yarn scripts for react-nest monorepos
-alias ycsd="yarn catalog-api start:debug"
-alias yfd="yarn fe develop"
-alias ybsd="yarn be start:debug"
-
 # Open chrome with remote debug port
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222"
 
