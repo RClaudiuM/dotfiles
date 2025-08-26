@@ -70,7 +70,7 @@
               "fish"
               "fzf"
               "hashicorp/tap/terraform"
-              "mongodb-community@8.0"
+              "mongodb-community"
               "postgresql@17"
               "nvm"
               "redis"
