@@ -98,7 +98,7 @@
               "obsidian"
               "karabiner-elements"
               "visual-studio-code"
-              "keycombiner"
+              # "keycombiner"
               # "warp"
               "mongodb-compass"
               # "microsoft-teams"
