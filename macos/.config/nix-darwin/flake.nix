@@ -53,6 +53,7 @@
             pkgs.raycast
             pkgs.nixfmt-rfc-style # Added nixfmt for formatting Nix files
             pkgs.brave
+            pkgs.rustup
           ];
 
           homebrew = {
@@ -128,47 +129,64 @@
               echo "Checking for Homebrew Node.js installation..."
               if [ -f "/opt/homebrew/bin/node" ]; then
                 echo "Node.js found, attempting to remove..."
-                sudo -u "${config.system.primaryUser}" /opt/homebrew/bin/brew uninstall --ignore-dependencies node || echo "Failed to uninstall Node.js"
+                sudo -u "${config.system.primaryUser}" env HOME="/Users/${config.system.primaryUser}" /opt/homebrew/bin/brew uninstall --ignore-dependencies node || echo "Failed to uninstall Node.js"
               else
                 echo "Node.js not found in Homebrew"
               fi
               echo "==============================================="
             '';
-            deps = [ "users" "groups" ];
+            # deps = [ "users" "groups" ];
           };
 
-          system.activationScripts.rustSetup = {
+          system.activationScripts.nvmInstallNode = {
             text = ''
-              echo "============= RUST INSTALLATION STARTING ==============="
-              echo "Setting up Rust via rustup..."
-
-              # Check if rustup is already initialized
-              if [ ! -f "$HOME/.cargo/bin/rustc" ]; then
-                echo "Installing Rust toolchain..."
-                sudo -u "$USER" rustup-init -y --no-modify-path --default-toolchain stable
-              else
-                echo "Rust already installed, updating..."
-                sudo -u "$USER" rustup update
-              fi
-
-              # Ensure default toolchain is set
-              if ! sudo -u "$USER" rustup show | grep -q "^default"; then
-                echo "Setting default toolchain to stable..."
-                sudo -u "$USER" rustup default stable
-              fi
-
-              # Ensure .cargo/env is sourced in shell config if not already
-              if ! grep -q "source \"$HOME/.cargo/env\"" "$HOME/.zshrc"; then
-                echo 'source "$HOME/.cargo/env"' >> $HOME/.zshrc
-              fi
-              echo "============= RUST INSTALLATION COMPLETE ==============="
+              echo "==============================================="
+              echo "Installing latest LTS Node.js via nvm for ${config.system.primaryUser}..."
+              export NVM_DIR="/Users/${config.system.primaryUser}/.nvm"
+              # shellcheck disable=SC1091
+              [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+              sudo -u "${config.system.primaryUser}" env HOME="/Users/${config.system.primaryUser}" NVM_DIR="$NVM_DIR" bash -c '
+                source /opt/homebrew/opt/nvm/nvm.sh
+                nvm install --lts
+                nvm use --lts
+                nvm alias default lts/*'
+              echo "==============================================="
             '';
-            # Add dependencies to ensure this runs after basic user setup but before applications
-            deps = [
-              "users"
-              "groups"
-            ];
           };
+
+          #! Deprecated
+          # system.activationScripts.rustSetup = {
+          #   text = ''
+          #     echo "============= RUST INSTALLATION STARTING ==============="
+          #     echo "Setting up Rust via rustup..."
+
+          #     # Check if rustup is already initialized
+          #     if [ ! -f "$HOME/.cargo/bin/rustc" ]; then
+          #       echo "Installing Rust toolchain..."
+          #       sudo -u "$USER" rustup-init -y --no-modify-path --default-toolchain stable
+          #     else
+          #       echo "Rust already installed, updating..."
+          #       sudo -u "$USER" rustup update
+          #     fi
+
+          #     # Ensure default toolchain is set
+          #     if ! sudo -u "$USER" rustup show | grep -q "^default"; then
+          #       echo "Setting default toolchain to stable..."
+          #       sudo -u "$USER" rustup default stable
+          #     fi
+
+          #     # Ensure .cargo/env is sourced in shell config if not already
+          #     if ! grep -q "source \"$HOME/.cargo/env\"" "$HOME/.zshrc"; then
+          #       echo 'source "$HOME/.cargo/env"' >> $HOME/.zshrc
+          #     fi
+          #     echo "============= RUST INSTALLATION COMPLETE ==============="
+          #   '';
+          #   # Add dependencies to ensure this runs after basic user setup but before applications
+          #   deps = [
+          #     "users"
+          #     "groups"
+          #   ];
+          # };
 
           # Deprecated
           # fonts.packages = [
@@ -200,6 +218,11 @@
                 echo "copying $src" >&2
                 ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
               done
+            '';
+
+            system.activationScripts.postActivation.text = ''
+              ${config.system.activationScripts.removeHomebrewNode.text}
+              ${config.system.activationScripts.nvmInstallNode.text}
             '';
 
           system.defaults = {
