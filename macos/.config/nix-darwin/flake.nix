@@ -61,7 +61,6 @@
             taps = [
               "hashicorp/tap"
               "mongodb/brew"
-              "homebrew/core"
             ];
 
             brews = [
