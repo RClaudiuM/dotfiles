@@ -59,8 +59,8 @@
             enable = true;
 
             taps = [
-              "homebrew/bundle"
-              "homebrew/cask"
+              "hashicorp/tap"
+              "mongodb/brew"
               "homebrew/core"
             ];
 
@@ -71,7 +71,7 @@
               "fish"
               "fzf"
               "hashicorp/tap/terraform"
-              "mongodb/brew/mongodb-community"
+              "mongodb-community@8.0"
               "postgresql@17"
               "nvm"
               "redis"
