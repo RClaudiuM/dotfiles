@@ -107,7 +107,7 @@
               # "notion-calendar"
               "discord"
               # "affine"
-              "pgadmin4"
+              # "pgadmin4"
               # "logitech-g-hub"
               # "linearmouse"
               "dbeaver-community"
@@ -138,18 +138,31 @@
             # deps = [ "users" "groups" ];
           };
 
-          system.activationScripts.nvmInstallNode = {
+          system.activationScripts.nvmInstallNodeAndPnpm = {
             text = ''
               echo "==============================================="
-              echo "Installing latest LTS Node.js via nvm for ${config.system.primaryUser}..."
+              echo "Ensuring Node.js and pnpm via nvm/Corepack for ${config.system.primaryUser}..."
               export NVM_DIR="/Users/${config.system.primaryUser}/.nvm"
               # shellcheck disable=SC1091
               [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
               sudo -u "${config.system.primaryUser}" env HOME="/Users/${config.system.primaryUser}" NVM_DIR="$NVM_DIR" bash -c '
                 source /opt/homebrew/opt/nvm/nvm.sh
-                nvm install --lts
-                nvm use --lts
-                nvm alias default lts/*'
+                if nvm ls | grep -q "v[0-9]"; then
+                  echo "Node.js already installed via nvm, skipping install."
+                else
+                  echo "No Node.js version found, installing latest LTS..."
+                  nvm install --lts
+                  nvm use --lts
+                  nvm alias default lts/*
+                fi
+                # Ensure corepack is enabled and pnpm is available
+                if command -v pnpm >/dev/null 2>&1; then
+                  echo "pnpm is already available."
+                else
+                  echo "Enabling pnpm via corepack..."
+                  corepack enable pnpm
+                fi
+              '
               echo "==============================================="
             '';
           };
@@ -222,7 +235,7 @@
 
             system.activationScripts.postActivation.text = ''
               ${config.system.activationScripts.removeHomebrewNode.text}
-              ${config.system.activationScripts.nvmInstallNode.text}
+              ${config.system.activationScripts.nvmInstallNodeAndPnpm.text}
             '';
 
           system.defaults = {
@@ -239,6 +252,7 @@
               # "${pkgs.obsidian}/Applications/Obsidian.app"
               "/System/Applications/System Settings.app"
               "/Applications/Visual Studio Code.app"
+              "/Applications/Cursor.app"
               "/Applications/Nix Apps/Brave Browser.app"
               "/Applications/Slack.app"
               "/Applications/Microsoft Teams.app"
@@ -248,7 +262,7 @@
               "/Applications/Figma.app"
               # "/Applications/Obsidian.app"
               "/Applications/Notion.app"
-              "/Applications/Postman.app"
+              # "/Applications/Postman.app"
               # "/Applications/MeetInOne.app"
               # "/Applications/Chrome Apps.localized/Google Meet.app"
               # "/System/Applications/Calendar.app"
