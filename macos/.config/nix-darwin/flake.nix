@@ -7,20 +7,6 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     # nix-homebrew.url = "git+https://github.com/zhaofengli/nix-homebrew?ref=refs/pull/71/merge";
-
-    # # Optional: Declarative tap management
-    # homebrew-core = {
-    #   url = "github:homebrew/homebrew-core";
-    #   # flake = false;
-    # };
-    # homebrew-cask = {
-    #   url = "github:homebrew/homebrew-cask";
-    #   # flake = false;
-    # };
-    # homebrew-bundle = {
-    #   url = "github:homebrew/homebrew-bundle";
-    #   # flake = false;
-    # };
   };
 
   outputs =
@@ -29,9 +15,6 @@
       nix-darwin,
       nixpkgs,
       nix-homebrew,
-      # homebrew-core,
-      # homebrew-cask,
-      # homebrew-bundle,
     }:
     let
       configuration =
@@ -45,11 +28,10 @@
           # $ nix-env -qaP | grep wget
           environment.systemPackages = [
             pkgs.vim
-            # pkgs.kanata
             pkgs.mkalias
             pkgs.rustup
             pkgs.awscli2
-            pkgs.localsend # Config
+            pkgs.localsend
             pkgs.raycast
             pkgs.nixfmt-rfc-style # Added nixfmt for formatting Nix files
             pkgs.brave
@@ -78,7 +60,6 @@
               "starship"
               "stow"
               # "exercism"
-              # "typescript"
               "openssl"
               "readline"
               "sqlite3"
@@ -89,30 +70,23 @@
               "pyenv"
               "gh"
               "bat"
-              # "sonar-scanner"
             ];
             casks = [
-              # "font-fira-code-nerd-font"
               "mos"
               "font-hack-nerd-font"
               "obsidian"
               "karabiner-elements"
               "visual-studio-code"
-              # "keycombiner"
               # "warp"
               "mongodb-compass"
               # "microsoft-teams"
               "figma"
               "notion"
-              # "notion-calendar"
               "discord"
               # "affine"
-              # "pgadmin4"
               # "logitech-g-hub"
-              # "linearmouse"
               "dbeaver-community"
-              # "logi-options+"
-              # "orbstack"
+
 
             ];
             # masApps = {
@@ -166,45 +140,6 @@
               echo "==============================================="
             '';
           };
-
-          #! Deprecated
-          # system.activationScripts.rustSetup = {
-          #   text = ''
-          #     echo "============= RUST INSTALLATION STARTING ==============="
-          #     echo "Setting up Rust via rustup..."
-
-          #     # Check if rustup is already initialized
-          #     if [ ! -f "$HOME/.cargo/bin/rustc" ]; then
-          #       echo "Installing Rust toolchain..."
-          #       sudo -u "$USER" rustup-init -y --no-modify-path --default-toolchain stable
-          #     else
-          #       echo "Rust already installed, updating..."
-          #       sudo -u "$USER" rustup update
-          #     fi
-
-          #     # Ensure default toolchain is set
-          #     if ! sudo -u "$USER" rustup show | grep -q "^default"; then
-          #       echo "Setting default toolchain to stable..."
-          #       sudo -u "$USER" rustup default stable
-          #     fi
-
-          #     # Ensure .cargo/env is sourced in shell config if not already
-          #     if ! grep -q "source \"$HOME/.cargo/env\"" "$HOME/.zshrc"; then
-          #       echo 'source "$HOME/.cargo/env"' >> $HOME/.zshrc
-          #     fi
-          #     echo "============= RUST INSTALLATION COMPLETE ==============="
-          #   '';
-          #   # Add dependencies to ensure this runs after basic user setup but before applications
-          #   deps = [
-          #     "users"
-          #     "groups"
-          #   ];
-          # };
-
-          # Deprecated
-          # fonts.packages = [
-          #   (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-          # ];
 
           fonts.packages = [
             pkgs.nerd-fonts.jetbrains-mono
@@ -260,12 +195,7 @@
               "/Applications/MongoDB Compass.app"
               "/System/Applications/Utilities/Terminal.app"
               "/Applications/Figma.app"
-              # "/Applications/Obsidian.app"
               "/Applications/Notion.app"
-              # "/Applications/Postman.app"
-              # "/Applications/MeetInOne.app"
-              # "/Applications/Chrome Apps.localized/Google Meet.app"
-              # "/System/Applications/Calendar.app"
             ];
             dock.persistent-others = [
               "/Users/claudiu.roman/Downloads"
@@ -283,20 +213,13 @@
           };
 
           # Auto upgrade nix package and the daemon service.
-          # ! Deprecated
-          # services.nix-daemon.enable = true;
-
           nix.enable = true;
-          
-
-
-          # nix.package = pkgs.nix;
 
           # Necessary for using flakes on this system.
           nix.settings.experimental-features = "nix-command flakes";
 
           # Create /etc/zshrc that loads the nix-darwin environment.
-          programs.zsh.enable = true; # default shell on catalina
+          programs.zsh.enable = true;
           # programs.fish.enable = true;
 
           # Set Git commit hash for darwin-version.
@@ -373,13 +296,6 @@
               user = "claudiu.roman";
               autoMigrate = true;
               mutableTaps = true;
-
-              # taps = {
-              #   "homebrew/homebrew-core" = homebrew-core;
-              #   "homebrew/homebrew-cask" = homebrew-cask;
-              #   "homebrew/homebrew-bundle" = homebrew-bundle;
-              # };
-
             };
           }
         ];
