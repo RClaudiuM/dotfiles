@@ -166,3 +166,11 @@ if [[ -d ~/.config/scripts ]]; then
 fi
 
 
+
+# pnpm
+export PNPM_HOME="/Users/Claudiu.Roman/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
