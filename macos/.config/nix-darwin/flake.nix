@@ -63,8 +63,8 @@
       };
     in
     {
-        # Build darwin flake using:
-        # $ darwin-rebuild build --flake .#clawMacOS
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#clawMacOS
       darwinConfigurations."clawMacOS" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration

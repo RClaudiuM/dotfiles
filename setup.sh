@@ -8,6 +8,13 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Parse command-line arguments
+DRY_RUN=false
+if [[ "$1" == "--dry-run" ]]; then
+    DRY_RUN=true
+    echo -e "${YELLOW}🔍 DRY RUN MODE - No changes will be made${NC}"
+fi
+
 # Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -47,17 +54,29 @@ install_stow() {
         case $PLATFORM in
             "macos")
                 if command_exists brew; then
-                    brew install stow
+                    if [ "$DRY_RUN" = true ]; then
+                        echo -e "${YELLOW}[DRY RUN] Would execute: brew install stow${NC}"
+                    else
+                        brew install stow
+                    fi
                 else
                     echo -e "${RED}ERROR: Homebrew not found. Please install Homebrew first.${NC}"
                     exit 1
                 fi
                 ;;
             "linux")
-                sudo apt-get update && sudo apt-get install -y stow
+                if [ "$DRY_RUN" = true ]; then
+                    echo -e "${YELLOW}[DRY RUN] Would execute: sudo apt-get update && sudo apt-get install -y stow${NC}"
+                else
+                    sudo apt-get update && sudo apt-get install -y stow
+                fi
                 ;;
             "arch")
-                sudo pacman -S --noconfirm stow
+                if [ "$DRY_RUN" = true ]; then
+                    echo -e "${YELLOW}[DRY RUN] Would execute: sudo pacman -S --noconfirm stow${NC}"
+                else
+                    sudo pacman -S --noconfirm stow
+                fi
                 ;;
             *)
                 echo -e "${RED}ERROR: Unknown platform for stow installation${NC}"
@@ -78,13 +97,21 @@ add_common_aliases() {
         
         # Add aliases to shell config if not already present
         if ! grep -q "alias gstu=" "$shell_config"; then
-            echo "alias gstu='git stash --include-untracked'" >> "$shell_config"
-            echo "✅ Added alias 'gstu' to $(basename "$shell_config")"
+            if [ "$DRY_RUN" = true ]; then
+                echo -e "${YELLOW}[DRY RUN] Would add alias 'gstu' to $(basename "$shell_config")${NC}"
+            else
+                echo "alias gstu='git stash --include-untracked'" >> "$shell_config"
+                echo "✅ Added alias 'gstu' to $(basename "$shell_config")"
+            fi
         fi
 
         if ! grep -q "alias gstaa=" "$shell_config"; then
-            echo "alias gstaa='git stash apply'" >> "$shell_config"
-            echo "✅ Added alias 'gstaa' to $(basename "$shell_config")"
+            if [ "$DRY_RUN" = true ]; then
+                echo -e "${YELLOW}[DRY RUN] Would add alias 'gstaa' to $(basename "$shell_config")${NC}"
+            else
+                echo "alias gstaa='git stash apply'" >> "$shell_config"
+                echo "✅ Added alias 'gstaa' to $(basename "$shell_config")"
+            fi
         fi
     fi
 }
@@ -93,8 +120,13 @@ add_common_aliases() {
 run_shared_bash_setup() {
     echo -e "${BLUE}🔧 Running shared tool setup...${NC}"
     if [ -f "shared/setup-bash.sh" ]; then
-        chmod +x "shared/setup-bash.sh"
-        source "shared/setup-bash.sh"
+        if [ "$DRY_RUN" = true ]; then
+            echo -e "${YELLOW}[DRY RUN] Would execute: chmod +x shared/setup-bash.sh${NC}"
+            echo -e "${YELLOW}[DRY RUN] Would source: shared/setup-bash.sh${NC}"
+        else
+            chmod +x "shared/setup-bash.sh"
+            source "shared/setup-bash.sh"
+        fi
     fi
 }
 
@@ -107,7 +139,10 @@ enhance_bashrc_template() {
         
         # Add script sourcing if not already present
         if ! grep -q "Source shared utility scripts" "$bashrc_path"; then
-            cat >> "$bashrc_path" << 'EOF'
+            if [ "$DRY_RUN" = true ]; then
+                echo -e "${YELLOW}[DRY RUN] Would add script sourcing to $bashrc_path${NC}"
+            else
+                cat >> "$bashrc_path" << 'EOF'
 
 # Source shared utility scripts
 for script in ~/.config/scripts/*.sh; do
@@ -118,18 +153,23 @@ done
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -f ~/.fzf-git.sh ] && source ~/.fzf-git.sh
 EOF
-            echo "✅ Added script sourcing to $bashrc_path"
+                echo "✅ Added script sourcing to $bashrc_path"
+            fi
         fi
         
         # Add our custom aliases if not present
         if ! grep -q "alias gstu=" "$bashrc_path"; then
-            cat >> "$bashrc_path" << 'EOF'
+            if [ "$DRY_RUN" = true ]; then
+                echo -e "${YELLOW}[DRY RUN] Would add custom aliases to $bashrc_path${NC}"
+            else
+                cat >> "$bashrc_path" << 'EOF'
 
 # Custom git aliases
 alias gstu='git stash --include-untracked'
 alias gstaa='git stash apply'
 EOF
-            echo "✅ Added custom aliases to $bashrc_path"
+                echo "✅ Added custom aliases to $bashrc_path"
+            fi
         fi
     fi
 }
@@ -139,13 +179,23 @@ setup_macos() {
     echo -e "${BLUE}🍎 Setting up macOS configuration...${NC}"
     
     # Remove existing dotfiles that might conflict
-    [ -f ~/.zshrc ] && rm ~/.zshrc
-    [ -f ~/.p10k.zsh ] && rm ~/.p10k.zsh
-    [ -f ~/.bashrc ] && rm ~/.bashrc
+    if [ "$DRY_RUN" = true ]; then
+        [ -f ~/.zshrc ] && echo -e "${YELLOW}[DRY RUN] Would remove: ~/.zshrc${NC}"
+        [ -f ~/.p10k.zsh ] && echo -e "${YELLOW}[DRY RUN] Would remove: ~/.p10k.zsh${NC}"
+        [ -f ~/.bashrc ] && echo -e "${YELLOW}[DRY RUN] Would remove: ~/.bashrc${NC}"
+    else
+        [ -f ~/.zshrc ] && rm ~/.zshrc
+        [ -f ~/.p10k.zsh ] && rm ~/.p10k.zsh
+        [ -f ~/.bashrc ] && rm ~/.bashrc
+    fi
 
     # Stow shared scripts first
     echo -e "${BLUE}📦 Stowing shared configurations...${NC}"
-    stow -t ~ shared
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN] Would execute: stow -t ~ shared${NC}"
+    else
+        stow -t ~ shared || true
+    fi
 
     # Run shared bash setup for tool installation (creates Oh My Bash .bashrc)
     run_shared_bash_setup
@@ -153,24 +203,52 @@ setup_macos() {
     # If Oh My Bash created a .bashrc and we don't have one in the repo yet, copy it
     if [ -f ~/.bashrc ] && [ ! -f "macos/.bashrc" ]; then
         echo -e "${BLUE}📋 Creating macos/.bashrc from Oh My Bash template...${NC}"
-        mkdir -p macos
-        cp ~/.bashrc macos/.bashrc
-        enhance_bashrc_template
-        echo "✅ Created enhanced macos/.bashrc template"
-        echo -e "${YELLOW}💡 You can now edit macos/.bashrc in your repo and run setup again${NC}"
+        if [ "$DRY_RUN" = true ]; then
+            echo -e "${YELLOW}[DRY RUN] Would execute: mkdir -p macos${NC}"
+            echo -e "${YELLOW}[DRY RUN] Would execute: cp ~/.bashrc macos/.bashrc${NC}"
+        else
+            mkdir -p macos
+            cp ~/.bashrc macos/.bashrc
+            enhance_bashrc_template
+            echo "✅ Created enhanced macos/.bashrc template"
+            echo -e "${YELLOW}💡 You can now edit macos/.bashrc in your repo and run setup again${NC}"
+        fi
     fi
 
     # Remove the generated .bashrc so we can stow our own
-    [ -f ~/.bashrc ] && rm ~/.bashrc
+    if [ "$DRY_RUN" = true ]; then
+        [ -f ~/.bashrc ] && echo -e "${YELLOW}[DRY RUN] Would remove: ~/.bashrc${NC}"
+    else
+        [ -f ~/.bashrc ] && rm ~/.bashrc
+    fi
 
     # Stow macOS-specific dotfiles (our customized .bashrc)
     if [ -d "macos" ]; then
         echo -e "${BLUE}📦 Stowing macOS dotfiles...${NC}"
-        stow -t ~ macos
+        if [ "$DRY_RUN" = true ]; then
+            echo -e "${YELLOW}[DRY RUN] Would execute: stow -t ~ macos${NC}"
+        else
+            stow -t ~ macos || true
+        fi
     fi
 
     # Add common aliases to .bashrc
     add_common_aliases ~/.bashrc
+    
+    # Run macOS-specific setup (Nix + nix-darwin)
+    if [ -f "macos/setup.sh" ]; then
+        echo -e "${BLUE}🔧 Running macOS-specific setup (Nix + nix-darwin)...${NC}"
+        if [ "$DRY_RUN" = true ]; then
+            echo -e "${YELLOW}[DRY RUN] Would execute: chmod +x macos/setup.sh${NC}"
+            echo -e "${YELLOW}[DRY RUN] Would execute: ./macos/setup.sh --dry-run${NC}"
+            # Still call it in dry-run mode to show what would happen
+            chmod +x macos/setup.sh
+            ./macos/setup.sh --dry-run
+        else
+            chmod +x macos/setup.sh
+            ./macos/setup.sh
+        fi
+    fi
 }
 
 # Devcontainer setup function
@@ -181,9 +259,14 @@ setup_devcontainer() {
     run_shared_bash_setup
 
     echo -e "${BLUE}📋 Copying shared scripts from shared/.config/scripts...${NC}"
-    mkdir -p ~/.config/scripts
-    if [ -d "shared/.config/scripts" ]; then
-        cp shared/.config/scripts/*.sh ~/.config/scripts/
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN] Would execute: mkdir -p ~/.config/scripts${NC}"
+        [ -d "shared/.config/scripts" ] && echo -e "${YELLOW}[DRY RUN] Would execute: cp shared/.config/scripts/*.sh ~/.config/scripts/${NC}"
+    else
+        mkdir -p ~/.config/scripts
+        if [ -d "shared/.config/scripts" ]; then
+            cp shared/.config/scripts/*.sh ~/.config/scripts/
+        fi
     fi
 
     # Enhance the generated .bashrc with customizations
