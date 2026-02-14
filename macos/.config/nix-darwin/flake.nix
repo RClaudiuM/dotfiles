@@ -24,6 +24,13 @@
           nixpkgs.config.allowUnfree = true;
           # nixpkgs.config.allowBroken = true;
 
+          # Environment variables to ensure Homebrew uses system Swift toolchain
+          # This prevents conflicts between Nix Swift and system Command Line Tools Swift
+          environment.variables = {
+            # Point to system Command Line Tools for Swift when available
+            DEVELOPER_DIR = "/Library/Developer/CommandLineTools";
+          };
+
           # List packages installed in system profile. To search by name, run:
           # $ nix-env -qaP | grep wget
           environment.systemPackages = [
@@ -168,9 +175,24 @@
               done
             '';
 
+            system.activationScripts.fixHomebrewSwift = {
+              text = ''
+                echo "==============================================="
+                echo "Configuring Homebrew to use system Swift..."
+                # Ensure system Swift is available for Homebrew operations
+                if [ -d "/Library/Developer/CommandLineTools" ]; then
+                  echo "System Command Line Tools found"
+                else
+                  echo "Warning: Command Line Tools not found. Install with: xcode-select --install"
+                fi
+                echo "==============================================="
+              '';
+            };
+
             system.activationScripts.postActivation.text = ''
               ${config.system.activationScripts.removeHomebrewNode.text}
               ${config.system.activationScripts.nvmInstallNodeAndPnpm.text}
+              ${config.system.activationScripts.fixHomebrewSwift.text}
             '';
 
           system.defaults = {
