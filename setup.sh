@@ -88,6 +88,36 @@ install_stow() {
     fi
 }
 
+# Install Homebrew if not present
+install_homebrew() {
+    if [[ "$PLATFORM" != "macos" ]]; then
+        echo -e "${BLUE}🍺 Skipping Homebrew installation on non-macOS platforms${NC}"
+        return 0
+    fi
+    
+    if command_exists brew; then
+        echo -e "${GREEN}✅ Homebrew already installed${NC}"
+        return
+    fi
+    
+    echo -e "${BLUE}🍺 Homebrew not found. Installing Homebrew...${NC}"
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN] Would execute: Homebrew install script${NC}"
+    else
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add brew to PATH for the current session (Apple Silicon vs Intel)
+        if [ -f /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -f /usr/local/bin/brew ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        else
+            echo -e "${RED}ERROR: Homebrew installed but binary not found in expected locations${NC}"
+            exit 1
+        fi
+    fi
+}
+
 # Add common aliases to shell configs
 add_common_aliases() {
     local shell_config="$1"
@@ -282,7 +312,8 @@ setup_devcontainer() {
 main() {
     echo -e "${BLUE}Platform detected: $PLATFORM${NC}"
     
-    # Install stow first
+    # Install stow and Homebrew first
+    install_homebrew
     install_stow
     
     # Platform-specific setup
