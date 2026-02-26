@@ -143,6 +143,15 @@ add_common_aliases() {
                 echo "✅ Added alias 'gstaa' to $(basename "$shell_config")"
             fi
         fi
+
+        if ! grep -q "alias gcml=" "$shell_config"; then
+            if [ "$DRY_RUN" = true ]; then
+                echo -e "${YELLOW}[DRY RUN] Would add alias 'gcml' to $(basename "$shell_config")${NC}"
+            else
+                echo "alias gcml='gcm && gl'" >> "$shell_config"
+                echo "✅ Added alias 'gcml' to $(basename "$shell_config")"
+            fi
+        fi
     fi
 }
 
