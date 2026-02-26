@@ -28,7 +28,7 @@
           localsend
           raycast
           nixfmt-rfc-style
-          brave
+          # brave !is installed via homebrew
         ];
         
         fonts.packages = with pkgs.nerd-fonts; [

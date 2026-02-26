@@ -29,10 +29,12 @@
       "zlib"
       "tcl-tk@8"
       "pyenv"
-      "gh"
+      # "gh"
       "bat"
     ];
     casks = [
+      "cursor"
+      "brave-browser"
       "mos"
       "font-hack-nerd-font"
       "obsidian"

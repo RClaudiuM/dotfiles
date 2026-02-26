@@ -11,7 +11,7 @@
       persistent-apps = [
         "/System/Applications/System Settings.app"
         "/Applications/Cursor.app"
-        "/Applications/Nix Apps/Brave Browser.app"
+        "/Applications/Brave Browser.app"
         "/Applications/Slack.app"
         "/Applications/Microsoft Teams.app"
         "/Applications/Microsoft Outlook.app"
