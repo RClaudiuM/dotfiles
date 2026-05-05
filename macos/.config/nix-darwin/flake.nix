@@ -7,11 +7,18 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+      inputs.brew-src.follows = "homebrew-brew";
+    };
+    homebrew-brew = {
+      url = "github:Homebrew/brew/5.0.16";
+      flake = false;
+    };
       # nix-homebrew.url = "git+https://github.com/zhaofengli/nix-homebrew?ref=refs/pull/71/merge";
   };
   
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, homebrew-brew, ... }:
     let
       configuration = { pkgs, config, ... }: {
         nixpkgs.config.allowUnfree = true;

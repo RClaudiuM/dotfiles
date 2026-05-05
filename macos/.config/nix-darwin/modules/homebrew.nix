@@ -45,6 +45,7 @@
       "notion"
       "discord"
       "dbeaver-community"
+      "warp"
     ];
     onActivation = {
       cleanup = "zap";
