@@ -60,8 +60,10 @@ fpath=(/Users/claudiu.roman/.docker/completions $fpath)
 # End of Docker CLI completions
 
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions (skip if nix-darwin /etc/zshrc already ran compinit)
+if ! (( $+functions[compdef] )); then
+  autoload -Uz compinit && compinit
+fi
 
 zinit cdreplay -q
 

@@ -18,13 +18,13 @@
         "/System/Applications/Utilities/Terminal.app"
         "/Applications/Figma.app"
         "/Applications/Notion.app"
+        "/Applications/Obsidian.app"
       ];
       persistent-others = [
         "/Users/claudiu.roman/Downloads"
         "/Users/claudiu.roman"
       ];
     };
-
     finder.FXPreferredViewStyle = "icnv";    
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";

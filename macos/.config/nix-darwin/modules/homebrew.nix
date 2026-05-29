@@ -48,7 +48,7 @@
       "warp"
     ];
     onActivation = {
-      cleanup = "zap";
+      cleanup = "none"; # brew bundle cleanup crashes in 5.1.11: key not found "node" (nvm dep). Bug: github.com/zhaofengli/nix-homebrew/issues
       autoUpdate = true;
       upgrade = true;
     };
